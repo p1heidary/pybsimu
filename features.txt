@@ -1,0 +1,3 @@
+- Wrapping with python, it has the readability of python and speed of c.
+- Generating geometry is more straightforward with pythonocc.
+- Loading and saving solids is managed by occ.
