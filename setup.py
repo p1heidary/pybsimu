@@ -1,7 +1,7 @@
 import os, sys, subprocess
 import os.path as osp
+from glob import glob
 # import shutil
-
 
 # # clean previous build
 # for root, dirs, files in os.walk(".", topdown=False):
@@ -17,20 +17,26 @@ from distutils.extension import Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
-MPI_DIR = os.environ.get('HDF5_DIR')
+if glob('*.o') and 'clean' in sys.argv:
+    [os.remove(f) for f in glob('*.o')]
 
-ext_modules=[
-    cythonize(Extension("ibsimu",
-        sources = ["ibsimu.pyx","src/*.cpp"],
-        # library_dirs = ['.'],
-        libraries = ['ibsimu'],
-        depends = ['numpy>1.7'])
-        )]
+MPI_DIR = os.environ.get('MPI_DIR')
+source_files = glob(os.path.join('src', '*.cpp'))
+source_files.insert(0, "kernel.pyx")
+
+ext_modules = cythonize(Extension("ibsimu",
+        sources = source_files,
+        language="c++",
+        include_dirs = ['src', '/usr/include/cairo'],
+        # libraries=["gnumath"],
+        ))
 
 # Extension("kernel",
 #     sources=["src/ibsimu.cpp"],
 #     libraries=["gnumath"],
 #     language="c++",),
+#     depends = ['numpy>1.7 ']
+#     library_dirs = ['.'],
 #     extra_compile_args=["-fopenmp", "-O3"],
 #     extra_link_args=["-DSOME_DEFINE_OPT",
 #                            "-L./some/extra/dependency/dir/"]),
