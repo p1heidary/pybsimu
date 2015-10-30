@@ -27,7 +27,8 @@ source_files.insert(0, "kernel.pyx")
 ext_modules = cythonize(Extension("ibsimu",
         sources = source_files,
         language="c++",
-        include_dirs = ['src', '/usr/include/cairo'],
+        include_dirs = ['src', '/usr/include/cairo'
+            '/usr/include/gtk-2.0'], # need config script
         # libraries=["gnumath"],
         ))
 
