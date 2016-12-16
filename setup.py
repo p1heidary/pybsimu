@@ -20,11 +20,13 @@ from Cython.Build import cythonize
 if glob('*.o') and 'clean' in sys.argv:
     [os.remove(f) for f in glob('*.o')]
 
-MPI_DIR = os.environ.get('MPI_DIR')
+MPI_DIR      = os.environ.get('MPI_DIR')
+IBSIMU_DIR   = os.environ.get('IBSIMU_DIR')
 source_files = glob(os.path.join('src', '*.cpp'))
 source_files.insert(0, "kernel.pyx")
 
-ext_modules = cythonize(Extension("ibsimu",
+ext_modules = cythonize(Extension(
+        "kernel",
         sources = source_files,
         language="c++",
         include_dirs = ['src', '/usr/include/cairo'
@@ -58,7 +60,7 @@ setup(
     # 'pybsimu.csg', 'pybsimu.bio',
     ],
     # py_modules = modules,
-    # ext_package='tracpy', 
+    # ext_package='trcpy', 
     scripts = [],
     cmdclass = {'build_ext': build_ext},
     ext_modules = ext_modules

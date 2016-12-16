@@ -1,0 +1,29 @@
+FITTIN PROCEDURE
+----------------
+
+1. Ray tracing through Solenoid magnet
+   -> (x,x',y,y') at input and output of simulation z=[-0.5,0.5]
+   Data in data.txt
+
+2. Run linfit for producing matrix representation
+   ~/Code/linfit/linfit  --infile data.txt --ivarc 4 --polyorder 1 --depcol 0
+   ~/Code/linfit/linfit  --infile data.txt --ivarc 4 --polyorder 1 --depcol 1
+   ~/Code/linfit/linfit  --infile data.txt --ivarc 4 --polyorder 1 --depcol 2
+   ~/Code/linfit/linfit  --infile data.txt --ivarc 4 --polyorder 1 --depcol 3
+
+   Fit to ray-tracing:
+   -0.16945  0.272915   -0.169915   0.268352
+   -1.75785  -0.172501  -1.72776   -0.165878
+   0.169905  -0.268383  -0.169429   0.272935
+   1.72775   0.165847   -1.75778   -0.172471
+
+3. Using ~/Code/Linear_optics/fit_solenoid.cpp fit the total matrix for
+   drift + solenoid + drift system to the matrix from ray-tracing
+
+   Fitted solenoid model with B0=0.225517, L=0.222328:
+   -0.174198     0.272027    -0.171882     0.268411 
+     -1.7511    -0.174198     -1.72782    -0.171882 
+    0.171882    -0.268411    -0.174198     0.272027 
+     1.72782     0.171882      -1.7511    -0.174198 
+
+Why is the length different from int(B^2 dx)/Bmax^2 = 0.130843 m
