@@ -1,0 +1,9 @@
+Veinzel = -5e3;
+h = 1e-3;
+nperh = 100;
+I = 1e-3;
+r0 = 10e-3;
+Npart = r0/h*nperh;
+J = I/(M_PI*r0*r0);
+E0 = 10e3;
+Tt = 0.1;

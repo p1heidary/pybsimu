@@ -1,4 +1,4 @@
-from libc.stdint cimport uint32_t, int64_t
+from libc.stdint cimport uint32_t, int64_t, int32_t
 # from libcpp.string cimport string
 from libcpp cimport bool
 
@@ -27,9 +27,11 @@ cdef extern from "src/vec3d.hpp":
 
 	cdef cppclass Int3D:
 		Int3D() except +
+		Int3D( int32_t , int32_t , int32_t ) except +
 
 	cdef cppclass Vec3D:
 		Vec3D() except +
+		Vec3D( double , double , double ) except +
 
 cdef extern from "src/meshvectorfield.hpp":
 	cdef cppclass MeshVectorField:
@@ -50,6 +52,10 @@ cdef extern from "src/ibsimu.hpp":
 		# void set_thread_count(int)
 		ostream message(int)
 
+cdef extern from "src/solid.hpp":
+	cdef cppclass Solid:
+		Solid() except +
+
 cdef extern from "src/geometry.hpp":
 	
 	cdef cppclass Bound:
@@ -57,8 +63,8 @@ cdef extern from "src/geometry.hpp":
 
 	cdef cppclass Geometry:
 		Geometry( geom_mode_e, Int3D, Vec3D, double ) except + 
-		# void set_solid( int, const Solid * )
-		# void set_boundary( int, const Bound )
+		void set_solid( int, const Solid * )
+		void set_boundary( int, const Bound )
 		void build_mesh()
 		Vec3D origo()
 		Vec3D max()
@@ -73,9 +79,17 @@ cdef extern from "src/epot_efield.hpp":
 		# void set_extrapolation( field_extrpl_e* extrpl ) # fixme array passed
 		void recalculate()
 
+cdef extern from "src/particledatabase.hpp":
+	cdef cppclass ParticleDataBase3D:
+		ParticleDataBase3D( const Geometry& ) except +
+
+cdef extern from "src/trajectorydiagnostics.hpp":
+	cdef cppclass TrajectoryDiagnosticData:
+		TrajectoryDiagnosticData() except +
+
 cdef extern from "src/epot_bicgstabsolver.hpp":
 	cdef cppclass EpotBiCGSTABSolver:
-		EpotBiCGSTABSolver( Geometry &geom, double eps = 1.0e-4, 
+		EpotBiCGSTABSolver( Geometry&, double eps = 1.0e-4, 
 			uint32_t imax = 10000, double newton_eps = 1.0e-4, 
 			uint32_t newton_imax = 10, bool gnewton = True ) except +
 		void solve( MeshScalarField&, const ScalarField& ) # fixme refrence
@@ -86,11 +100,13 @@ cdef extern from "mydxffile.hpp":
 		MyDXFFile() except +
 		# void set_warning_level( int )
 		void read( const string& ) # fixme std &
+		void set_warning_level ( int )
 
 cdef extern from "dxf_solid.hpp":
 	cdef cppclass DXFSolid:
 		DXFSolid( MyDXFFile*, const string& ) except +
 		void scale( double )
+		void define_2x3_mapping()
 
 # cdef extern from "src/gtkplotter.hpp":
 # cdef extern from "src/trajectorydiagnostics.hpp":

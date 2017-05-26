@@ -22,16 +22,22 @@ if glob('*.o') and 'clean' in sys.argv:
 
 MPI_DIR      = os.environ.get('MPI_DIR')
 IBSIMU_DIR   = os.environ.get('IBSIMU_DIR')
-source_files = glob(os.path.join('src', '*.cpp'))
-source_files.insert(0, "kernel.pyx")
+# source_files = glob(os.path.join('src', '*.cpp'))
+# source_files.insert(0, "kernel.pyx")
 
 ext_modules = cythonize(Extension(
         "kernel",
-        sources = source_files,
+        sources = ["kernel.pyx"],
         language="c++",
-        include_dirs = ['src', '/usr/include/cairo'
-            '/usr/include/gtk-2.0'], # need config script
-        # libraries=["gnumath"],
+        include_dirs = ['src', '/usr/include/cairo',
+            '/usr/include/gtk-2.0', '/usr/include/glib-2.0',
+            '/usr/lib64/glib-2.0/include', # /usr/bin/glib-config
+            '/usr/include/pango-1.0', # /usr/lib64/pkgconfig/pango.pc
+            '/usr/lib64/gtk-2.0/include/', # /usr/lib64/pkgconfig/gdk-2.0.pc
+            '/usr/include/gdk-pixbuf-2.0', # /usr/lib64/pkgconfig/gdk-pixbuf-2.0.pc
+            '/usr/include/atk-1.0', # /usr/lib64/pkgconfig/atk.pc
+            ], # need config script
+        libraries=[ IBSIMU_DIR + "/lib64/libibsimu-1.0.6.so"],
         ))
 
 # Extension("kernel",
@@ -67,3 +73,4 @@ setup(
 )
 
 # opencascade path and dependency
+# python setup.py build_ext --inplace
